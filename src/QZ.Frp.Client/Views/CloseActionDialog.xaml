@@ -1,0 +1,44 @@
+<ui:FluentWindow x:Class="QZ.Frp.Client.Views.CloseActionDialog"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="关闭 QZ-FRP"
+                 Width="440"
+                 Height="320"
+                 MinWidth="400"
+                 WindowStartupLocation="CenterOwner"
+                 ResizeMode="NoResize"
+                 WindowBackdropType="None"
+                 FontFamily="{StaticResource AppFontFamily}"
+                 FontSize="12"
+                 Icon="pack://application:,,,/Assets/Icons/app.ico">
+    <Grid Margin="24" Background="{StaticResource PageBackgroundBrush}">
+        <Border Style="{StaticResource PanelStyle}" Padding="24">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="关闭 QZ-FRP" Style="{StaticResource PageTitleStyle}" />
+
+                <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                    <RadioButton x:Name="ExitRadio"
+                                 Content="直接退出"
+                                 IsChecked="True"
+                                 Margin="0,0,0,12" />
+                    <RadioButton x:Name="TrayRadio"
+                                 Content="最小化到托盘"
+                                 Margin="0,0,0,16" />
+                    <CheckBox x:Name="RememberCheck" Content="下次不再提示" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <ui:Button Content="取消" Click="Cancel_Click" Margin="0,0,8,0" />
+                    <ui:Button Content="确定" Appearance="Primary" Click="Confirm_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:FluentWindow>

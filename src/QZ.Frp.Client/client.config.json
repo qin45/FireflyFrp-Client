@@ -1,0 +1,8 @@
+{
+  "serverUrl": "",
+  "lockServerUrl": false,
+  "frpcPath": "",
+  "pollIntervalSeconds": 3,
+  "requestTimeoutSeconds": 10,
+  "useSystemProxy": true
+}

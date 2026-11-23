@@ -1,0 +1,220 @@
+<ui:FluentWindow x:Class="QZ.Frp.Client.Views.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="QZ-FRP"
+                 Width="1040"
+                 Height="700"
+                 MinWidth="900"
+                 MinHeight="620"
+                 WindowStartupLocation="CenterScreen"
+                 WindowBackdropType="Mica"
+                 ExtendsContentIntoTitleBar="True"
+                 FontFamily="{StaticResource AppFontFamily}"
+                 FontSize="12"
+                 Icon="pack://application:,,,/Assets/Icons/app.ico"
+                 Closing="Window_Closing">
+
+    <DockPanel>
+        <ui:TitleBar DockPanel.Dock="Top" Title="QZ-FRP" />
+        <Grid Margin="24" Background="{StaticResource PageBackgroundBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="隧道" Style="{StaticResource PageTitleStyle}" />
+                    <TextBlock Text="{Binding Username}"
+                               Style="{StaticResource MutedTextStyle}"
+                               Margin="0,4,0,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:Button Content="新建隧道"
+                               Appearance="Primary"
+                               Click="NewTunnel_Click"
+                               Margin="0,0,8,0" />
+                    <ui:Button Content="刷新"
+                               Command="{Binding RefreshCommand}"
+                               Margin="0,0,8,0" />
+                    <ui:Button Content="修改密码"
+                               Click="ChangePassword_Click"
+                               Margin="0,0,8,0" />
+                    <ui:Button Content="退出登录"
+                               Appearance="Transparent"
+                               Command="{Binding LogoutCommand}" />
+                </StackPanel>
+            </Grid>
+
+            <Border Grid.Row="1" Style="{StaticResource PanelStyle}" Padding="20" Margin="0,20,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="剩余流量" Style="{StaticResource SectionTitleStyle}" />
+                        <TextBlock Text="{Binding RemainingText}" Style="{StaticResource StatValueStyle}" Margin="0,4,0,0" />
+                        <ProgressBar Value="{Binding QuotaPercent}"
+                                     Maximum="100"
+                                     Height="4"
+                                     Margin="0,10,0,0"
+                                     Foreground="{StaticResource AccentBrush}"
+                                     Background="{StaticResource HairlineBrush}" />
+                        <TextBlock Text="{Binding QuotaText}" Style="{StaticResource MutedTextStyle}" Margin="0,6,0,0" />
+                    </StackPanel>
+
+                    <Border Grid.Column="1"
+                            BorderBrush="{StaticResource HairlineBrush}"
+                            BorderThickness="0.5,0,0,0"
+                            Padding="20,0,0,0">
+                        <StackPanel>
+                            <TextBlock Text="限速" Style="{StaticResource SectionTitleStyle}" />
+                            <TextBlock Text="{Binding RateLimitText}" Style="{StaticResource StatValueStyle}" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            BorderBrush="{StaticResource HairlineBrush}"
+                            BorderThickness="0.5,0,0,0"
+                            Padding="20,0,0,0">
+                        <StackPanel>
+                            <TextBlock Text="并发上限" Style="{StaticResource SectionTitleStyle}" />
+                            <TextBlock Text="{Binding ActiveLimitText}" Style="{StaticResource StatValueStyle}" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <ui:InfoBar Grid.Row="2"
+                        Margin="0,12,0,0"
+                        IsOpen="{Binding IsConnected, Converter={StaticResource InverseBool}}"
+                        IsClosable="False"
+                        Severity="Warning"
+                        Title="连接中断"
+                        Message="{Binding ConnectionMessage}" />
+
+            <Grid Grid.Row="3" Margin="0,20,0,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Tunnels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource PanelStyle}"
+                                        Width="340"
+                                        Margin="0,0,16,16">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding Name}"
+                                                       FontSize="15"
+                                                       FontWeight="SemiBold"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center" />
+                                            <ui:ToggleSwitch Grid.Column="1"
+                                                             IsChecked="{Binding IsRunning, Mode=OneWay}"
+                                                             Command="{Binding ToggleCommand}"
+                                                             IsEnabled="{Binding CanToggle}"
+                                                             VerticalAlignment="Center" />
+                                        </Grid>
+
+                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                            <Border Style="{StaticResource TypeBadgeStyle}">
+                                                <TextBlock Text="{Binding TypeLabel}"
+                                                           FontSize="12"
+                                                           Foreground="{StaticResource ChipTextBrush}" />
+                                            </Border>
+                                            <TextBlock Text="{Binding StatusText}"
+                                                       Style="{StaticResource MutedTextStyle}"
+                                                       Foreground="{Binding StatusBrush}"
+                                                       Margin="10,0,0,0"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+
+                                        <TextBlock Text="{Binding LocalTarget}"
+                                                   Style="{StaticResource MutedTextStyle}"
+                                                   Margin="0,12,0,0" />
+
+                                        <Grid Margin="0,8,0,0"
+                                              Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibility}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding PublicAddress}"
+                                                       FontFamily="Consolas"
+                                                       FontSize="12"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center"
+                                                       Visibility="{Binding PublicAddress, Converter={StaticResource NullToVisibility}}" />
+                                            <ui:Button Grid.Column="1"
+                                                       Content="{Binding CopyButtonText}"
+                                                       Appearance="Transparent"
+                                                       Command="{Binding CopyAddressCommand}"
+                                                       IsEnabled="{Binding CanCopy}"
+                                                       Padding="8,4"
+                                                       Margin="8,0,0,0" />
+                                        </Grid>
+
+                                        <TextBlock Text="{Binding TrafficText}"
+                                                   Style="{StaticResource MutedTextStyle}"
+                                                   Margin="0,8,0,0" />
+
+                                        <TextBlock Text="{Binding ErrorText}"
+                                                   Style="{StaticResource DangerTextStyle}"
+                                                   Margin="0,8,0,0"
+                                                   Visibility="{Binding ErrorText, Converter={StaticResource NullToVisibility}}" />
+
+                                        <Grid Margin="0,12,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <ui:Button Grid.Column="0"
+                                                       Content="接管"
+                                                       Appearance="Secondary"
+                                                       Command="{Binding TakeoverCommand}"
+                                                       HorizontalAlignment="Left"
+                                                       Visibility="{Binding IsTakeoverVisible, Converter={StaticResource BoolToVisibility}}" />
+                                            <ui:Button Grid.Column="1"
+                                                       Content="删除"
+                                                       Appearance="Transparent"
+                                                       Command="{Binding DeleteCommand}"
+                                                       HorizontalAlignment="Right" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <TextBlock Text="暂无隧道"
+                           Style="{StaticResource MutedTextStyle}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}" />
+            </Grid>
+        </Grid>
+    </DockPanel>
+</ui:FluentWindow>
