@@ -74,7 +74,7 @@ dotnet run --project src/QZ.Frp.Client
 |---|---|---|---|
 | `serverUrl` | string | `""` | 用户服务 API 根地址，例如 `https://api.example.com`。留空时登录页显示服务端地址输入框。 |
 | `lockServerUrl` | bool | `false` | 设为 `true` 且 `serverUrl` 非空时，登录页**不显示服务端地址**，固定使用 `serverUrl`。 |
-| `frpcPath` | string | `""` | 为空时使用内置 `Resources\frpc\frpc.exe`；可填绝对路径覆盖，便于升级 frpc。 |
+| `frpcPath` | string | `""` | 为空时优先使用 `Resources\frpc\frpc.exe`；如果复制时没有带上该目录，会自动释放内置 frpc 到 `%LocalAppData%\QZ-FRP\bin\frpc.exe`。也可填绝对路径覆盖。 |
 | `pollIntervalSeconds` | int | `3` | 主界面轮询用户信息的间隔（秒），用于刷新剩余流量、限速、隧道在线状态。 |
 | `requestTimeoutSeconds` | int | `10` | API 请求超时（秒）。 |
 | `useSystemProxy` | bool | `true` | 是否使用系统代理访问 API。设为 `false` 可绕过代理直连。 |
@@ -245,7 +245,7 @@ dotnet publish src/QZ.Frp.Client -c Release -r win-x64 --self-contained true \
 - `Resources\frpc\frpc.exe`
 - 运行所需的其他文件
 
-`frpc.exe` 来自 QZ-FRP 的 frp Windows 构建；如果服务端 frp 升级，建议同步替换。
+`frpc.exe` 同时内嵌在 `QZ-FRP.exe` 中：如果只复制 exe 和 `client.config.json` 到其他路径或电脑，首次启动隧道时会自动释放到 `%LocalAppData%\QZ-FRP\bin\frpc.exe`。如果 `Resources\frpc\frpc.exe` 存在，则优先使用外部文件，便于不重新打包就升级 frpc。
 
 ---
 

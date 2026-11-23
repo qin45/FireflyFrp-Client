@@ -37,6 +37,9 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
+    <EmbeddedResource Include="Resources\frpc\frpc.exe">
+      <LogicalName>QZ.Frp.Client.Resources.frpc.exe</LogicalName>
+    </EmbeddedResource>
     <Resource Include="..\..\图标.ico" Link="Assets\Icons\app.ico" />
   </ItemGroup>
 

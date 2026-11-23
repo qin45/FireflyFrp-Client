@@ -70,9 +70,27 @@ public sealed class AppConfigService
     {
         if (!string.IsNullOrWhiteSpace(Config.FrpcPath))
         {
-            return Config.FrpcPath;
+            var configured = Config.FrpcPath.Trim();
+            if (!Path.IsPathRooted(configured))
+            {
+                configured = Path.Combine(AppPaths.BaseDirectory, configured);
+            }
+            if (File.Exists(configured))
+            {
+                return configured;
+            }
+            // A copied config may still contain an absolute path from another
+            // computer. Fall through to the bundled copy instead of failing.
         }
-        return AppPaths.BundledFrpcPath;
+        if (File.Exists(AppPaths.BundledFrpcPath))
+        {
+            return AppPaths.BundledFrpcPath;
+        }
+        if (File.Exists(AppPaths.FrpcNextToExePath))
+        {
+            return AppPaths.FrpcNextToExePath;
+        }
+        return AppPaths.ExtractBundledFrpc();
     }
 
     public bool IsServerUrlVisible =>
