@@ -1,5 +1,7 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using FireflyFrp.Client.ViewModels;
 using Wpf.Ui.Controls;
 
@@ -7,6 +9,9 @@ namespace FireflyFrp.Client.Views;
 
 public partial class MainWindow : FluentWindow
 {
+    private const string ReleasesUrl = "https://github.com/qin45/FireflyFrp-Client/releases";
+    private const string LicenseUrl = "https://github.com/qin45/FireflyFrp-Client/blob/master/LICENSE";
+
     private bool _allowClose;
 
     public MainWindow()
@@ -72,8 +77,65 @@ public partial class MainWindow : FluentWindow
         ((App)Application.Current).ShowCreateTunnelDialog();
     }
 
+    private void MoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (MoreButton.Flyout is ContextMenu menu)
+        {
+            menu.PlacementTarget = MoreButton;
+            menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            menu.IsOpen = true;
+        }
+    }
+
     private void ChangePassword_Click(object sender, RoutedEventArgs e)
     {
+        CloseMoreMenu();
         ((App)Application.Current).ShowChangePasswordDialog();
+    }
+
+    private void CheckUpdates_Click(object sender, RoutedEventArgs e)
+    {
+        CloseMoreMenu();
+        OpenUrl(ReleasesUrl);
+    }
+
+    private void OpenLicenses_Click(object sender, RoutedEventArgs e)
+    {
+        CloseMoreMenu();
+        OpenUrl(LicenseUrl);
+    }
+
+    private void Logout_Click(object sender, RoutedEventArgs e)
+    {
+        CloseMoreMenu();
+        if (DataContext is MainViewModel viewModel)
+        {
+            viewModel.LogoutCommand.Execute(null);
+        }
+    }
+
+    private void CloseMoreMenu()
+    {
+        if (MoreButton.Flyout is ContextMenu menu)
+        {
+            menu.IsOpen = false;
+        }
+        MoreButton.IsDropDownOpen = false;
+    }
+
+    private static void OpenUrl(string url)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show(
+                $"无法打开浏览器：{ex.Message}",
+                "FireflyFrp",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning);
+        }
     }
 }

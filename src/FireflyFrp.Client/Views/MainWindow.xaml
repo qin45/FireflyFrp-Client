@@ -46,12 +46,19 @@
                     <ui:Button Content="刷新"
                                Command="{Binding RefreshCommand}"
                                Margin="0,0,8,0" />
-                    <ui:Button Content="修改密码"
-                               Click="ChangePassword_Click"
-                               Margin="0,0,8,0" />
-                    <ui:Button Content="退出登录"
-                               Appearance="Transparent"
-                               Command="{Binding LogoutCommand}" />
+                    <ui:DropDownButton x:Name="MoreButton"
+                                       Content="更多"
+                                       Click="MoreButton_Click">
+                        <ui:DropDownButton.Flyout>
+                            <ContextMenu>
+                                <ui:MenuItem Header="修改密码" Click="ChangePassword_Click" />
+                                <ui:MenuItem Header="检查更新" Click="CheckUpdates_Click" />
+                                <ui:MenuItem Header="开源软件许可证" Click="OpenLicenses_Click" />
+                                <Separator />
+                                <ui:MenuItem Header="退出登录" Click="Logout_Click" />
+                            </ContextMenu>
+                        </ui:DropDownButton.Flyout>
+                    </ui:DropDownButton>
                 </StackPanel>
             </Grid>
 
