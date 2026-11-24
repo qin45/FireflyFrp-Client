@@ -1,7 +1,7 @@
 using System.Text.Json;
-using QZ.Frp.Client.Models;
+using FireflyFrp.Client.Models;
 
-namespace QZ.Frp.Client.Services;
+namespace FireflyFrp.Client.Services;
 
 public sealed class AccountStore
 {

@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace QZ.Frp.Client.Services;
+namespace FireflyFrp.Client.Services;
 
 /// <summary>
 /// Translates the API's English error details into user-facing Chinese.

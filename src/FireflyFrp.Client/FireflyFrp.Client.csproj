@@ -8,11 +8,11 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>..\..\图标.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AssemblyName>QZ-FRP</AssemblyName>
-    <RootNamespace>QZ.Frp.Client</RootNamespace>
+    <AssemblyName>FireflyFrp</AssemblyName>
+    <RootNamespace>FireflyFrp.Client</RootNamespace>
     <Version>1.0.0</Version>
-    <Authors>QZ-FRP</Authors>
-    <Product>QZ-FRP Client</Product>
+    <Authors>FireflyFrp</Authors>
+    <Product>FireflyFrp Client</Product>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,7 +38,7 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
     <EmbeddedResource Include="Resources\frpc\frpc.exe">
-      <LogicalName>QZ.Frp.Client.Resources.frpc.exe</LogicalName>
+      <LogicalName>FireflyFrp.Client.Resources.frpc.exe</LogicalName>
     </EmbeddedResource>
     <Resource Include="..\..\图标.ico" Link="Assets\Icons\app.ico" />
   </ItemGroup>

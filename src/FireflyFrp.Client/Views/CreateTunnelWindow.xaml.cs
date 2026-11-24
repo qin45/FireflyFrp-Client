@@ -1,7 +1,7 @@
 using System.Windows;
 using Wpf.Ui.Controls;
 
-namespace QZ.Frp.Client.Views;
+namespace FireflyFrp.Client.Views;
 
 public partial class CreateTunnelWindow : FluentWindow
 {

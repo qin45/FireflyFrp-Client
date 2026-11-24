@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace QZ.Frp.Client.Models;
+namespace FireflyFrp.Client.Models;
 
 public sealed class LoginRequest
 {

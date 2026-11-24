@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using System.Windows;
-using QZ.Frp.Client.ViewModels;
+using FireflyFrp.Client.ViewModels;
 using Wpf.Ui.Controls;
 
-namespace QZ.Frp.Client.Views;
+namespace FireflyFrp.Client.Views;
 
 public partial class LoginWindow : FluentWindow
 {

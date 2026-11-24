@@ -1,6 +1,6 @@
-# QZ-FRP Windows 客户端
+# FireflyFrp Windows 客户端
 
-基于 **C# WPF / .NET 10** 的 QZ-FRP Windows 桌面客户端，提供：
+基于 **C# WPF / .NET 10** 的 FireflyFrp Windows 桌面客户端，提供：
 
 - 登录 / 注册 / 自动登录 / 保存登录状态
 - 顶部展示剩余流量、限速、并发上限
@@ -17,11 +17,11 @@
 
 - Windows 10 / 11 x64
 - .NET 10 SDK（开发）或 .NET 10 Desktop Runtime（运行）
-- 可访问 QZ-FRP 用户服务后端
+- 可访问 FireflyFrp 用户服务后端
 - 后端已配置 frps 插件、管理员充值入口等
 
 > 当前项目目标框架为 `net10.0-windows`，因为开发机安装了 .NET 10 SDK。  
-> 如需 .NET 8，安装 .NET 8 SDK/Desktop targeting pack 后，把 `QZ.Frp.Client.csproj`
+> 如需 .NET 8，安装 .NET 8 SDK/Desktop targeting pack 后，把 `FireflyFrp.Client.csproj`
 > 和测试项目的 `TargetFramework` 改为 `net8.0-windows` 即可。
 
 ---
@@ -29,10 +29,10 @@
 ## 2. 快速开始
 
 ```bash
-cd QZ-FRPC
+cd FireflyFrp-Client
 dotnet restore
 dotnet build
-dotnet run --project src/QZ.Frp.Client
+dotnet run --project src/FireflyFrp.Client
 ```
 
 首次启动显示登录窗口：
@@ -57,7 +57,7 @@ dotnet run --project src/QZ.Frp.Client
 
 ## 3. 配置文件 `client.config.json`
 
-文件位于 exe 同目录（开发时在 `src/QZ.Frp.Client/client.config.json`，发布时复制到输出目录）。
+文件位于 exe 同目录（开发时在 `src/FireflyFrp.Client/client.config.json`，发布时复制到输出目录）。
 
 ```json
 {
@@ -74,7 +74,7 @@ dotnet run --project src/QZ.Frp.Client
 |---|---|---|---|
 | `serverUrl` | string | `""` | 用户服务 API 根地址，例如 `https://api.example.com`。留空时登录页显示服务端地址输入框。 |
 | `lockServerUrl` | bool | `false` | 设为 `true` 且 `serverUrl` 非空时，登录页**不显示服务端地址**，固定使用 `serverUrl`。 |
-| `frpcPath` | string | `""` | 为空时优先使用 `Resources\frpc\frpc.exe`；如果复制时没有带上该目录，会自动释放内置 frpc 到 `%LocalAppData%\QZ-FRP\bin\frpc.exe`。也可填绝对路径覆盖。 |
+| `frpcPath` | string | `""` | 为空时优先使用 `Resources\frpc\frpc.exe`；如果复制时没有带上该目录，会自动释放内置 frpc 到 `%LocalAppData%\FireflyFrp\bin\frpc.exe`。也可填绝对路径覆盖。 |
 | `pollIntervalSeconds` | int | `3` | 主界面轮询用户信息的间隔（秒），用于刷新剩余流量、限速、隧道在线状态。 |
 | `requestTimeoutSeconds` | int | `10` | API 请求超时（秒）。 |
 | `useSystemProxy` | bool | `true` | 是否使用系统代理访问 API。设为 `false` 可绕过代理直连。 |
@@ -101,7 +101,7 @@ dotnet run --project src/QZ.Frp.Client
 ## 4. 登录与安全存储
 
 - 勾选“保存登录状态”后，客户端使用 **Windows DPAPI（CurrentUser）** 加密保存：
-  - `%AppData%\QZ-FRP\accounts\<accountKey>\auth.dat`
+  - `%AppData%\FireflyFrp\accounts\<accountKey>\auth.dat`
   - 内容：服务端地址、用户名、平台 token、过期时间
 - **不会保存密码**。
 - 下次启动自动读取并调用 `/api/v1/user` 恢复登录：
@@ -112,19 +112,19 @@ dotnet run --project src/QZ.Frp.Client
 隧道启动配置同样使用 DPAPI 加密保存：
 
 ```
-%AppData%\QZ-FRP\accounts\<accountKey>\tunnels\<tunnelId>.dat
+%AppData%\FireflyFrp\accounts\<accountKey>\tunnels\<tunnelId>.dat
 ```
 
 运行时临时配置写入：
 
 ```
-%LocalAppData%\QZ-FRP\run\<tunnelId>.toml
+%LocalAppData%\FireflyFrp\run\<tunnelId>.toml
 ```
 
 停止隧道或退出客户端时删除临时配置。日志位于：
 
 ```
-%LocalAppData%\QZ-FRP\logs\
+%LocalAppData%\FireflyFrp\logs\
 ```
 
 ---
@@ -215,7 +215,7 @@ dotnet run --project src/QZ.Frp.Client
 图标只用于 exe / 窗口 / 任务栏 / 托盘，不在登录页和主界面显示。
 
 ```
-QZ-FRPC/图标.ico                 # 唯一的图标源文件（多尺寸 ico）
+FireflyFrp-Client/图标.ico                 # 唯一的图标源文件（多尺寸 ico）
 ```
 
 csproj 的 `<ApplicationIcon>` 和 WPF `Resource` 都指向 `图标.ico`；托盘服务使用
@@ -227,12 +227,12 @@ csproj 的 `<ApplicationIcon>` 和 WPF `Resource` 都指向 `图标.ico`；托�
 ## 9. 构建与发布
 
 ```bash
-cd QZ-FRPC
+cd FireflyFrp-Client
 dotnet restore
 dotnet build
 dotnet test
 
-dotnet publish src/QZ.Frp.Client -c Release -r win-x64 --self-contained true \
+dotnet publish src/FireflyFrp.Client -c Release -r win-x64 --self-contained true \
   -p:PublishSingleFile=true \
   -p:IncludeNativeLibrariesForSelfExtract=true \
   -o publish
@@ -240,12 +240,12 @@ dotnet publish src/QZ.Frp.Client -c Release -r win-x64 --self-contained true \
 
 发布目录包含：
 
-- `QZ-FRP.exe`（单文件自包含）
+- `FireflyFrp.exe`（单文件自包含）
 - `client.config.json`
 - `Resources\frpc\frpc.exe`
 - 运行所需的其他文件
 
-`frpc.exe` 同时内嵌在 `QZ-FRP.exe` 中：如果只复制 exe 和 `client.config.json` 到其他路径或电脑，首次启动隧道时会自动释放到 `%LocalAppData%\QZ-FRP\bin\frpc.exe`。如果 `Resources\frpc\frpc.exe` 存在，则优先使用外部文件，便于不重新打包就升级 frpc。
+`frpc.exe` 同时内嵌在 `FireflyFrp.exe` 中：如果只复制 exe 和 `client.config.json` 到其他路径或电脑，首次启动隧道时会自动释放到 `%LocalAppData%\FireflyFrp\bin\frpc.exe`。如果 `Resources\frpc\frpc.exe` 存在，则优先使用外部文件，便于不重新打包就升级 frpc。
 
 ---
 

@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace QZ.Frp.Client.Converters;
+namespace FireflyFrp.Client.Converters;
 
 public sealed class NullToVisibilityConverter : IValueConverter
 {

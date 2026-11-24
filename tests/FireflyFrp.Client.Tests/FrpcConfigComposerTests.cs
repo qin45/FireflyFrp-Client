@@ -1,6 +1,6 @@
-using QZ.Frp.Client.Services;
+using FireflyFrp.Client.Services;
 
-namespace QZ.Frp.Client.Tests;
+namespace FireflyFrp.Client.Tests;
 
 public sealed class FrpcConfigComposerTests
 {

@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Threading;
 using System.Windows;
-using QZ.Frp.Client.Services;
-using QZ.Frp.Client.ViewModels;
-using QZ.Frp.Client.Views;
+using FireflyFrp.Client.Services;
+using FireflyFrp.Client.ViewModels;
+using FireflyFrp.Client.Views;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-namespace QZ.Frp.Client;
+namespace FireflyFrp.Client;
 
 public partial class App : Application
 {
@@ -30,7 +30,7 @@ public partial class App : Application
             WriteCrash(args.Exception);
             System.Windows.MessageBox.Show(
                 args.Exception.Message,
-                "QZ-FRP 启动错误",
+                "FireflyFrp 启动错误",
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Error);
             args.Handled = true;
@@ -38,12 +38,12 @@ public partial class App : Application
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
             WriteCrash(args.ExceptionObject as Exception);
 
-        _singleInstance = new Mutex(true, "QZ-FRP-Client-SingleInstance", out var created);
+        _singleInstance = new Mutex(true, "FireflyFrp-Client-SingleInstance", out var created);
         if (!created)
         {
             System.Windows.MessageBox.Show(
-                "QZ-FRP 客户端已经在运行。",
-                "QZ-FRP",
+                "FireflyFrp 客户端已经在运行。",
+                "FireflyFrp",
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Information);
             Shutdown();
@@ -108,12 +108,12 @@ public partial class App : Application
         _loginWindow.Show();
     }
 
-    private void OnLoginSucceeded(object? sender, QZ.Frp.Client.Models.LoginResult result)
+    private void OnLoginSucceeded(object? sender, FireflyFrp.Client.Models.LoginResult result)
     {
         _ = HandleLoginSucceededAsync(result);
     }
 
-    private async Task HandleLoginSucceededAsync(QZ.Frp.Client.Models.LoginResult result)
+    private async Task HandleLoginSucceededAsync(FireflyFrp.Client.Models.LoginResult result)
     {
         if (_session is not null || _mainWindow is not null)
         {

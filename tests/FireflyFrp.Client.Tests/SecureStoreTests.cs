@@ -1,13 +1,13 @@
-using QZ.Frp.Client.Services;
+using FireflyFrp.Client.Services;
 
-namespace QZ.Frp.Client.Tests;
+namespace FireflyFrp.Client.Tests;
 
 public sealed class SecureStoreTests
 {
     [Fact]
     public void RoundTripsProtectedData()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"qz-secure-{Guid.NewGuid():N}.dat");
+        var path = Path.Combine(Path.GetTempPath(), $"fireflyfrp-secure-{Guid.NewGuid():N}.dat");
         try
         {
             SecureStore.Save(path, "{\"token\":\"secret\"}", "test");
@@ -26,7 +26,7 @@ public sealed class SecureStoreTests
     [Fact]
     public void ReturnsNullForCorruptData()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"qz-secure-{Guid.NewGuid():N}.dat");
+        var path = Path.Combine(Path.GetTempPath(), $"fireflyfrp-secure-{Guid.NewGuid():N}.dat");
         try
         {
             File.WriteAllBytes(path, [1, 2, 3, 4]);

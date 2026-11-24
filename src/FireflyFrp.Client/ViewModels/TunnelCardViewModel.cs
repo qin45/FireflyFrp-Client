@@ -3,10 +3,10 @@ using System.Windows;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using QZ.Frp.Client.Models;
-using QZ.Frp.Client.Services;
+using FireflyFrp.Client.Models;
+using FireflyFrp.Client.Services;
 
-namespace QZ.Frp.Client.ViewModels;
+namespace FireflyFrp.Client.ViewModels;
 
 public sealed partial class TunnelCardViewModel : ObservableObject
 {

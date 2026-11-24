@@ -1,8 +1,8 @@
-<ui:FluentWindow x:Class="QZ.Frp.Client.Views.MainWindow"
+<ui:FluentWindow x:Class="FireflyFrp.Client.Views.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-                 Title="QZ-FRP"
+                 Title="FireflyFrp"
                  Width="1040"
                  Height="700"
                  MinWidth="900"
@@ -16,7 +16,7 @@
                  Closing="Window_Closing">
 
     <DockPanel>
-        <ui:TitleBar DockPanel.Dock="Top" Title="QZ-FRP" />
+        <ui:TitleBar DockPanel.Dock="Top" Title="FireflyFrp" />
         <Grid Margin="24" Background="{StaticResource PageBackgroundBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

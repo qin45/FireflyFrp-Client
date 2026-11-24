@@ -4,7 +4,7 @@ using System.Windows.Media.Imaging;
 using H.NotifyIcon;
 using H.NotifyIcon.Core;
 
-namespace QZ.Frp.Client.Services;
+namespace FireflyFrp.Client.Services;
 
 public sealed class TrayIconService : IDisposable
 {
@@ -33,7 +33,7 @@ public sealed class TrayIconService : IDisposable
     {
         var icon = new TaskbarIcon
         {
-            ToolTipText = "QZ-FRP",
+            ToolTipText = "FireflyFrp",
             IconSource = new BitmapImage(
                 new Uri("pack://application:,,,/Assets/Icons/app.ico", UriKind.Absolute)),
         };
@@ -71,7 +71,7 @@ public sealed class TrayIconService : IDisposable
         try
         {
             _icon?.ShowNotification(
-                "QZ-FRP",
+                "FireflyFrp",
                 message,
                 NotificationIcon.Info,
                 null,

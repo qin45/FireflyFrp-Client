@@ -1,19 +1,19 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace QZ.Frp.Client.Services;
+namespace FireflyFrp.Client.Services;
 
 public static class AppPaths
 {
-    private const string FrpcResourceName = "QZ.Frp.Client.Resources.frpc.exe";
+    private const string FrpcResourceName = "FireflyFrp.Client.Resources.frpc.exe";
 
     public static string BaseDirectory => AppContext.BaseDirectory;
 
     public static string AppDataDirectory =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "QZ-FRP");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FireflyFrp");
 
     public static string LocalDataDirectory =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "QZ-FRP");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FireflyFrp");
 
     public static string SettingsFile => Path.Combine(AppDataDirectory, "settings.json");
 
@@ -28,7 +28,7 @@ public static class AppPaths
 
     /// <summary>
     /// Extracts the embedded frpc.exe to LocalAppData so the client remains
-    /// usable when only QZ-FRP.exe is copied to another folder or machine.
+    /// usable when only FireflyFrp.exe is copied to another folder or machine.
     /// </summary>
     public static string ExtractBundledFrpc()
     {

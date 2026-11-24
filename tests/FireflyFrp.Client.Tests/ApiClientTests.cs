@@ -2,10 +2,10 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using QZ.Frp.Client.Models;
-using QZ.Frp.Client.Services;
+using FireflyFrp.Client.Models;
+using FireflyFrp.Client.Services;
 
-namespace QZ.Frp.Client.Tests;
+namespace FireflyFrp.Client.Tests;
 
 public sealed class ApiClientTests
 {

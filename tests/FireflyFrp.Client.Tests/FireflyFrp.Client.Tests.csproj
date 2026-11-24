@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\QZ.Frp.Client\QZ.Frp.Client.csproj" />
+    <ProjectReference Include="..\..\src\FireflyFrp.Client\FireflyFrp.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>

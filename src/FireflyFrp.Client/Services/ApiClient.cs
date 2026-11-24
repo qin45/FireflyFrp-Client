@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using QZ.Frp.Client.Models;
+using FireflyFrp.Client.Models;
 
-namespace QZ.Frp.Client.Services;
+namespace FireflyFrp.Client.Services;
 
 public sealed class ApiException : Exception
 {

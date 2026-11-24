@@ -1,4 +1,4 @@
-namespace QZ.Frp.Client.Services;
+namespace FireflyFrp.Client.Services;
 
 public sealed class TunnelConfigStore
 {

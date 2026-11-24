@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace QZ.Frp.Client.Services;
+namespace FireflyFrp.Client.Services;
 
 public sealed class AppConfig
 {

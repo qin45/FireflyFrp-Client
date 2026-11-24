@@ -1,8 +1,8 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/QZ.Frp.Client/QZ.Frp.Client.csproj" />
+    <Project Path="src/FireflyFrp.Client/FireflyFrp.Client.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/QZ.Frp.Client.Tests/QZ.Frp.Client.Tests.csproj" />
+    <Project Path="tests/FireflyFrp.Client.Tests/FireflyFrp.Client.Tests.csproj" />
   </Folder>
 </Solution>

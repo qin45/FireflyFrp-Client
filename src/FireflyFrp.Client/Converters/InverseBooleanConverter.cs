@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace QZ.Frp.Client.Converters;
+namespace FireflyFrp.Client.Converters;
 
 public sealed class InverseBooleanConverter : IValueConverter
 {

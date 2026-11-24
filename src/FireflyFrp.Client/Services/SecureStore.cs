@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace QZ.Frp.Client.Services;
+namespace FireflyFrp.Client.Services;
 
 /// <summary>
 /// DPAPI (CurrentUser) wrapper. The protected blob can only be read by the
@@ -9,7 +9,7 @@ namespace QZ.Frp.Client.Services;
 /// </summary>
 public static class SecureStore
 {
-    private const string EntropyPrefix = "QZ-FRP.Client.v1|";
+    private const string EntropyPrefix = "FireflyFrp.Client.v1|";
 
     public static void Save(string path, string plaintext, string purpose)
     {
