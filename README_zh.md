@@ -1,5 +1,7 @@
 # FireflyFrp Windows 客户端
 
+[English](README.md) | [简体中文](README_zh.md)
+
 基于 **C# WPF / .NET 10** 的 FireflyFrp Windows 桌面客户端，提供：
 
 - 登录 / 注册 / 自动登录 / 保存登录状态
@@ -51,7 +53,7 @@ dotnet run --project src/FireflyFrp.Client
 
 登录成功后进入主界面，顶部显示用户名、剩余流量和限速，下面展示隧道卡片。
 
-登录后可点击顶部 **修改密码**，输入原密码和新密码（8-72 位）。修改成功后所有登录会话会失效，客户端会停止本机隧道并返回登录页，使用新密码重新登录。
+登录后可点击右上角 **更多 → 修改密码**，输入原密码和新密码（8-72 位）。修改成功后所有登录会话会失效，客户端会停止本机隧道并返回登录页，使用新密码重新登录。
 
 ---
 
@@ -66,7 +68,8 @@ dotnet run --project src/FireflyFrp.Client
   "frpcPath": "",
   "pollIntervalSeconds": 3,
   "requestTimeoutSeconds": 10,
-  "useSystemProxy": true
+  "useSystemProxy": true,
+  "trustedCertificates": []
 }
 ```
 
@@ -78,6 +81,7 @@ dotnet run --project src/FireflyFrp.Client
 | `pollIntervalSeconds` | int | `3` | 主界面轮询用户信息的间隔（秒），用于刷新剩余流量、限速、隧道在线状态。 |
 | `requestTimeoutSeconds` | int | `10` | API 请求超时（秒）。 |
 | `useSystemProxy` | bool | `true` | 是否使用系统代理访问 API。设为 `false` 可绕过代理直连。 |
+| `trustedCertificates` | list[string] | `[]` | 预置信任的 HTTPS 证书。可填证书文件路径（相对 exe 或绝对路径），或 SHA-256 指纹（如 `sha256:AB:CD:...`）。 |
 
 ### 托管部署示例
 
@@ -90,7 +94,8 @@ dotnet run --project src/FireflyFrp.Client
   "frpcPath": "",
   "pollIntervalSeconds": 3,
   "requestTimeoutSeconds": 10,
-  "useSystemProxy": true
+  "useSystemProxy": true,
+  "trustedCertificates": []
 }
 ```
 
@@ -108,6 +113,27 @@ dotnet run --project src/FireflyFrp.Client
   - 401 → 清除保存状态，回到登录页；
   - 网络错误 → 保留状态，提示无法连接服务器。
 - 退出登录/禁用账号/会话过期时清除 `auth.dat` 并停止所有本机隧道。
+
+### 4.1 HTTPS 证书信任
+
+使用 `https://` 服务端地址时，客户端会校验证书：
+
+- 系统已信任的证书直接连接；
+- 自签名等不可信证书会弹出证书详情，由用户选择“信任并继续”或取消；
+- 选择信任后会保存到 `%AppData%\FireflyFrp\trusted-certs.json`，后续同一证书自动信任；
+- 也可以在 `client.config.json` 中提前配置：
+
+```json
+{
+  "serverUrl": "https://frp-api.example.com",
+  "trustedCertificates": [
+    "certs/server.crt",
+    "sha256:AB:CD:EF:..."
+  ]
+}
+```
+
+证书文件路径相对 exe 目录或使用绝对路径。只应信任自己服务器的证书；信任未知证书会带来中间人攻击风险。
 
 隧道启动配置同样使用 DPAPI 加密保存：
 
@@ -257,6 +283,7 @@ dotnet publish src/FireflyFrp.Client -c Release -r win-x64 --self-contained true
 | 现象 | 处理 |
 |---|---|
 | 无法连接服务器 | 检查 `serverUrl`、网络、HTTPS 证书；确认用户服务已启动。 |
+| 提示服务器证书不受信任 | 确认服务器身份后点击“信任并继续”；也可在 `client.config.json` 的 `trustedCertificates` 预置证书文件或 SHA-256 指纹。 |
 | 登录已失效 | 重新登录；或检查后端 session 过期时间。 |
 | 流量不足 | 管理员在用户服务中充值（`remaining_traffic_bytes`）。 |
 | 最多同时开启 3 条 | 先停止其他隧道；上限由后端 `max_active_tunnels` 控制。 |

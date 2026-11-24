@@ -1,0 +1,74 @@
+<ui:FluentWindow x:Class="FireflyFrp.Client.Views.CertificateTrustDialog"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="证书安全提示"
+                 Width="520"
+                 Height="560"
+                 MinWidth="460"
+                 WindowStartupLocation="CenterOwner"
+                 ResizeMode="NoResize"
+                 WindowBackdropType="None"
+                 FontFamily="{StaticResource AppFontFamily}"
+                 FontSize="12"
+                 Icon="pack://application:,,,/Assets/Icons/app.ico">
+    <Grid Margin="24" Background="{StaticResource PageBackgroundBrush}">
+        <Border Style="{StaticResource PanelStyle}" Padding="24">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="服务器证书不受信任" Style="{StaticResource PageTitleStyle}" />
+                    <TextBlock Text="无法验证服务器证书。如果你确认这是自己的服务器，可以信任该证书并继续连接。"
+                               Style="{StaticResource MutedTextStyle}"
+                               TextWrapping="Wrap"
+                               Margin="0,8,0,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                    <Border Background="{StaticResource ChipBackgroundBrush}"
+                            CornerRadius="8"
+                            Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="主机" Style="{StaticResource SectionTitleStyle}" />
+                            <TextBlock x:Name="HostValue" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap" />
+
+                            <TextBlock Text="主题" Style="{StaticResource SectionTitleStyle}" Margin="0,12,0,0" />
+                            <TextBlock x:Name="SubjectValue" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap" />
+
+                            <TextBlock Text="颁发者" Style="{StaticResource SectionTitleStyle}" Margin="0,12,0,0" />
+                            <TextBlock x:Name="IssuerValue" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap" />
+
+                            <TextBlock Text="有效期" Style="{StaticResource SectionTitleStyle}" Margin="0,12,0,0" />
+                            <TextBlock x:Name="ValidityValue" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap" />
+
+                            <TextBlock Text="SHA-256" Style="{StaticResource SectionTitleStyle}" Margin="0,12,0,0" />
+                            <TextBlock x:Name="FingerprintValue"
+                                       FontFamily="Consolas"
+                                       FontSize="12"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Text="问题" Style="{StaticResource SectionTitleStyle}" Margin="0,12,0,0" />
+                            <TextBlock x:Name="ErrorsValue" Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="信任后会记住此证书，后续连接将自动信任。请仅在确认服务器身份时继续。"
+                               Style="{StaticResource MutedTextStyle}"
+                               TextWrapping="Wrap"
+                               Margin="0,14,0,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <ui:Button Content="取消" Click="Cancel_Click" Margin="0,0,8,0" />
+                    <ui:Button Content="信任并继续" Appearance="Primary" Click="Trust_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:FluentWindow>

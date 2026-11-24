@@ -10,6 +10,7 @@ public sealed class AppConfig
     public int PollIntervalSeconds { get; set; } = 3;
     public int RequestTimeoutSeconds { get; set; } = 10;
     public bool UseSystemProxy { get; set; } = true;
+    public List<string> TrustedCertificates { get; set; } = new();
 }
 
 public sealed class AppConfigService
@@ -39,6 +40,11 @@ public sealed class AppConfigService
             Config = JsonSerializer.Deserialize<AppConfig>(json, JsonOptions) ?? new AppConfig();
             Config.ServerUrl = Config.ServerUrl.Trim();
             Config.FrpcPath = Config.FrpcPath.Trim();
+            Config.TrustedCertificates ??= new List<string>();
+            Config.TrustedCertificates = Config.TrustedCertificates
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value.Trim())
+                .ToList();
             if (Config.PollIntervalSeconds < 1)
             {
                 Config.PollIntervalSeconds = 3;

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Windows;
 using FireflyFrp.Client.Services;
@@ -15,6 +17,7 @@ public partial class App : Application
     private AppConfigService? _configService;
     private AppSettingsStore? _settingsStore;
     private ApiClient? _api;
+    private CertificateTrustStore? _trustStore;
     private ClientSession? _session;
     private LoginWindow? _loginWindow;
     private MainWindow? _mainWindow;
@@ -57,10 +60,12 @@ public partial class App : Application
         _configService.Load();
         _settingsStore = new AppSettingsStore();
         _settingsStore.Load();
+        _trustStore = new CertificateTrustStore(_configService, ShowCertificateTrustDialog);
         _api = new ApiClient(
             new HttpClient(new HttpClientHandler
             {
                 UseProxy = _configService.Config.UseSystemProxy,
+                ServerCertificateCustomValidationCallback = ValidateServerCertificate,
             }),
             TimeSpan.FromSeconds(_configService.Config.RequestTimeoutSeconds));
 
@@ -80,6 +85,53 @@ public partial class App : Application
         {
             // Nothing else we can do.
         }
+    }
+
+    private bool ValidateServerCertificate(
+        HttpRequestMessage request,
+        X509Certificate2? certificate,
+        X509Chain? chain,
+        SslPolicyErrors errors)
+    {
+        if (request.RequestUri?.Scheme != Uri.UriSchemeHttps)
+        {
+            return true;
+        }
+        return _trustStore?.Validate(request.RequestUri.Host, certificate, errors) ?? false;
+    }
+
+    private bool ShowCertificateTrustDialog(CertificateTrustRequest request)
+    {
+        var app = Application.Current;
+        if (app is null)
+        {
+            return false;
+        }
+        try
+        {
+            var dispatcher = app.Dispatcher;
+            if (dispatcher.CheckAccess())
+            {
+                return ShowCertificateTrustDialogCore(request);
+            }
+            return dispatcher.Invoke(() => ShowCertificateTrustDialogCore(request));
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private bool ShowCertificateTrustDialogCore(CertificateTrustRequest request)
+    {
+        if (_exiting)
+        {
+            return false;
+        }
+        Window? owner = _loginWindow;
+        owner ??= _mainWindow;
+        var dialog = new CertificateTrustDialog(request) { Owner = owner };
+        return dialog.ShowDialog() == true;
     }
 
     private static void ApplyTheme()

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Authentication;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -115,6 +116,12 @@ public sealed partial class LoginViewModel : ObservableObject
             _api.ClearSession();
             ErrorMessage = "登录已过期，请重新登录。";
         }
+        catch (HttpRequestException ex) when (ex.InnerException is AuthenticationException)
+        {
+            _api.ClearSession();
+            StatusMessage = "";
+            ErrorMessage = "服务器 HTTPS 证书不受信任，已取消连接。";
+        }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
             _api.ClearSession();
@@ -205,6 +212,11 @@ public sealed partial class LoginViewModel : ObservableObject
         catch (ApiException ex)
         {
             ErrorMessage = ex.Message;
+            return;
+        }
+        catch (HttpRequestException ex) when (ex.InnerException is AuthenticationException)
+        {
+            ErrorMessage = "服务器 HTTPS 证书不受信任，已取消连接。";
             return;
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
@@ -302,6 +314,11 @@ public sealed partial class LoginViewModel : ObservableObject
         {
             _api.ClearSession();
             ErrorMessage = ex.Message;
+        }
+        catch (HttpRequestException ex) when (ex.InnerException is AuthenticationException)
+        {
+            _api.ClearSession();
+            ErrorMessage = "服务器 HTTPS 证书不受信任，已取消连接。";
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {

@@ -4,5 +4,6 @@
   "frpcPath": "",
   "pollIntervalSeconds": 3,
   "requestTimeoutSeconds": 10,
-  "useSystemProxy": true
+  "useSystemProxy": true,
+  "trustedCertificates": []
 }

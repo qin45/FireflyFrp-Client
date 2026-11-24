@@ -17,6 +17,9 @@ public static class AppPaths
 
     public static string SettingsFile => Path.Combine(AppDataDirectory, "settings.json");
 
+    public static string TrustedCertificatesFile =>
+        Path.Combine(AppDataDirectory, "trusted-certs.json");
+
     public static string RuntimeConfigDirectory => Path.Combine(LocalDataDirectory, "run");
 
     public static string LogsDirectory => Path.Combine(LocalDataDirectory, "logs");
