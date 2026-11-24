@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using FireflyFrp.Client.Services;
 using FireflyFrp.Client.ViewModels;
 using Wpf.Ui.Controls;
 
@@ -17,6 +18,9 @@ public partial class MainWindow : FluentWindow
     public MainWindow()
     {
         InitializeComponent();
+        UpdateThemeMenuItem();
+        ThemeService.Changed += OnThemeChanged;
+        Closed += (_, _) => ThemeService.Changed -= OnThemeChanged;
     }
 
     public void ForceClose()
@@ -91,6 +95,26 @@ public partial class MainWindow : FluentWindow
     {
         CloseMoreMenu();
         ((App)Application.Current).ShowChangePasswordDialog();
+    }
+
+    private void ToggleTheme_Click(object sender, RoutedEventArgs e)
+    {
+        CloseMoreMenu();
+        ((App)Application.Current).ToggleTheme();
+        UpdateThemeMenuItem();
+    }
+
+    private void OnThemeChanged(object? sender, EventArgs e)
+    {
+        UpdateThemeMenuItem();
+    }
+
+    private void UpdateThemeMenuItem()
+    {
+        if (ThemeMenuItem is not null)
+        {
+            ThemeMenuItem.Header = ThemeService.GetToggleLabel();
+        }
     }
 
     private void CheckUpdates_Click(object sender, RoutedEventArgs e)

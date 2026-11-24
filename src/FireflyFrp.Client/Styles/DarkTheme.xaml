@@ -1,0 +1,25 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Dark neutrals: lower contrast surfaces, one accent, no heavy shadows. -->
+    <SolidColorBrush x:Key="PageBackgroundBrush" Color="#141518" />
+    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#1D1E22" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#2D2E33" />
+    <SolidColorBrush x:Key="HairlineBrush" Color="#26272B" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#E6E7EA" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#9BA1AA" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="#858C96" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#6E9BFF" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#1D2B45" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="#3FB950" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#F07373" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#D6A23A" />
+    <SolidColorBrush x:Key="ChipBackgroundBrush" Color="#25262A" />
+    <SolidColorBrush x:Key="ChipTextBrush" Color="#B8BDC6" />
+
+    <!-- Dark surfaces need one weight step down to avoid optical bloom. -->
+    <FontWeight x:Key="TitleFontWeight">Medium</FontWeight>
+    <FontWeight x:Key="StrongFontWeight">Medium</FontWeight>
+    <FontWeight x:Key="LabelFontWeight">Normal</FontWeight>
+
+</ResourceDictionary>

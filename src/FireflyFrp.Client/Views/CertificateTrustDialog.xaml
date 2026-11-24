@@ -9,10 +9,12 @@
                  WindowStartupLocation="CenterOwner"
                  ResizeMode="NoResize"
                  WindowBackdropType="None"
+                 Background="{DynamicResource PageBackgroundBrush}"
                  FontFamily="{StaticResource AppFontFamily}"
                  FontSize="12"
                  Icon="pack://application:,,,/Assets/Icons/app.ico">
-    <Grid Margin="24" Background="{StaticResource PageBackgroundBrush}">
+    <Border Background="{DynamicResource PageBackgroundBrush}" Padding="24">
+        <Grid>
         <Border Style="{StaticResource PanelStyle}" Padding="24">
             <Grid>
                 <Grid.RowDefinitions>
@@ -30,7 +32,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Margin="0,20,0,0">
-                    <Border Background="{StaticResource ChipBackgroundBrush}"
+                    <Border Background="{DynamicResource ChipBackgroundBrush}"
                             CornerRadius="8"
                             Padding="16">
                         <StackPanel>
@@ -50,7 +52,7 @@
                             <TextBlock x:Name="FingerprintValue"
                                        FontFamily="Consolas"
                                        FontSize="12"
-                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
                                        TextWrapping="Wrap" />
 
                             <TextBlock Text="问题" Style="{StaticResource SectionTitleStyle}" Margin="0,12,0,0" />
@@ -70,5 +72,6 @@
                 </StackPanel>
             </Grid>
         </Border>
-    </Grid>
+        </Grid>
+    </Border>
 </ui:FluentWindow>

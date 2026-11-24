@@ -7,6 +7,7 @@ public sealed class AppSettings
     public string LastServerUrl { get; set; } = "";
     public string LastUsername { get; set; } = "";
     public string CloseAction { get; set; } = "ask";
+    public string Theme { get; set; } = "system";
 }
 
 public sealed class AppSettingsStore
@@ -34,6 +35,10 @@ public sealed class AppSettingsStore
             if (Settings.CloseAction is not ("ask" or "exit" or "tray"))
             {
                 Settings.CloseAction = "ask";
+            }
+            if (Settings.Theme is not ("system" or "light" or "dark"))
+            {
+                Settings.Theme = "system";
             }
         }
         catch

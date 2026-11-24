@@ -6,8 +6,6 @@ using System.Windows;
 using FireflyFrp.Client.Services;
 using FireflyFrp.Client.ViewModels;
 using FireflyFrp.Client.Views;
-using Wpf.Ui.Appearance;
-using Wpf.Ui.Controls;
 
 namespace FireflyFrp.Client;
 
@@ -54,12 +52,13 @@ public partial class App : Application
         }
 
         AppPaths.EnsureDirectories();
-        ApplyTheme();
 
         _configService = new AppConfigService();
         _configService.Load();
         _settingsStore = new AppSettingsStore();
         _settingsStore.Load();
+        ThemeService.Apply(_settingsStore.Settings.Theme);
+        ThemeService.StartSystemWatcher();
         _trustStore = new CertificateTrustStore(_configService, ShowCertificateTrustDialog);
         _api = new ApiClient(
             new HttpClient(new HttpClientHandler
@@ -134,11 +133,16 @@ public partial class App : Application
         return dialog.ShowDialog() == true;
     }
 
-    private static void ApplyTheme()
+    public void ToggleTheme()
     {
-        // Keep the custom light palette consistent; Mica still gives the modern
-        // window material on Windows 11 and degrades gracefully on Windows 10.
-        ApplicationThemeManager.Apply(ApplicationTheme.Light, WindowBackdropType.Mica, true);
+        if (_settingsStore is null)
+        {
+            return;
+        }
+        var next = ThemeService.GetOppositePreference();
+        _settingsStore.Settings.Theme = next;
+        _settingsStore.Save();
+        ThemeService.Apply(next);
     }
 
     public void ShowLogin(string? message = null)
@@ -408,6 +412,7 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        ThemeService.StopSystemWatcher();
         _tray?.Dispose();
         _session?.Frpc.Dispose();
         try

@@ -181,7 +181,9 @@ They are deleted when a tunnel stops or the client exits. Logs are written to:
 - Concurrent tunnel limit (for example `3`)
 - Only the current username is shown at the top-left; the server URL is hidden
 - **New Tunnel** / **Refresh** / **More**
-- More menu: **Change Password** / **Check for Updates** / **Open-Source Licenses** / **Log out**
+- More menu: **Change Password** / **Light mode** or **Dark mode** / **Check for Updates** / **Open-Source Licenses** / **Log out**
+  - The theme item shows the opposite mode of the current theme and switches to it when clicked
+  - The theme follows the system by default; the selected mode is saved as the `Theme` field (`system` / `light` / `dark`) in `%AppData%\FireflyFrp\settings.json`
   - Check for Updates opens the client repository's Releases page
   - Open-Source Licenses opens the client repository's LICENSE page
 

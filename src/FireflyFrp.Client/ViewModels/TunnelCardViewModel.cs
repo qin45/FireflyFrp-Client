@@ -10,11 +10,11 @@ namespace FireflyFrp.Client.ViewModels;
 
 public sealed partial class TunnelCardViewModel : ObservableObject
 {
-    private static readonly Brush OnlineBrush = new SolidColorBrush(Color.FromRgb(26, 127, 55));
-    private static readonly Brush StartingBrush = new SolidColorBrush(Color.FromRgb(47, 111, 237));
-    private static readonly Brush StoppingBrush = new SolidColorBrush(Color.FromRgb(154, 103, 0));
-    private static readonly Brush ErrorBrush = new SolidColorBrush(Color.FromRgb(198, 40, 40));
-    private static readonly Brush RemoteBrush = new SolidColorBrush(Color.FromRgb(110, 118, 129));
+    private static readonly Brush OnlineBrush = new SolidColorBrush(Color.FromRgb(63, 185, 80));
+    private static readonly Brush StartingBrush = new SolidColorBrush(Color.FromRgb(91, 140, 255));
+    private static readonly Brush StoppingBrush = new SolidColorBrush(Color.FromRgb(210, 153, 34));
+    private static readonly Brush ErrorBrush = new SolidColorBrush(Color.FromRgb(229, 83, 75));
+    private static readonly Brush RemoteBrush = new SolidColorBrush(Color.FromRgb(139, 148, 158));
 
     private readonly ClientSession _session;
     private readonly Func<Task> _refresh;
