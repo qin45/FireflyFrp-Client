@@ -160,6 +160,21 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         {
             Tunnels.Remove(card);
         }
+
+        var trafficExhausted = user.TrafficRemainingBytes <= 0 ||
+            string.Equals(user.Status, "exhausted", StringComparison.OrdinalIgnoreCase);
+        foreach (var card in Tunnels)
+        {
+            if (trafficExhausted)
+            {
+                _ = card.HandleTrafficExhaustedAsync();
+            }
+            else
+            {
+                card.ClearTrafficExhausted();
+            }
+        }
+
         TunnelsChanged?.Invoke(this, EventArgs.Empty);
     }
 

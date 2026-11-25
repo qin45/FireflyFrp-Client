@@ -191,7 +191,8 @@ They are deleted when a tunnel stops or the client exits. Logs are written to:
 
 - Name and type badge (TCP/UDP/HTTP/HTTPS)
 - Local target, for example `127.0.0.1:22`
-- State: Online / Tunnel closed (green) / Starting / Stopping / Running in another client / Disconnected
+- State: Online / Tunnel closed (gray) / Starting / Stopping / Running in another client / Disconnected
+- When the quota is exhausted, the tunnel switch is turned off and a clear quota message is shown
 - Stopping a tunnel intentionally does not show raw frpc logs; only abnormal exits show an error tail
 - Public address, shown only while online:
   - TCP/UDP: `host:port`

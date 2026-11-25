@@ -15,11 +15,14 @@ public sealed partial class TunnelCardViewModel : ObservableObject
     private static readonly Brush StoppingBrush = new SolidColorBrush(Color.FromRgb(210, 153, 34));
     private static readonly Brush ErrorBrush = new SolidColorBrush(Color.FromRgb(229, 83, 75));
     private static readonly Brush RemoteBrush = new SolidColorBrush(Color.FromRgb(139, 148, 158));
+    private static readonly Brush ClosedBrush = new SolidColorBrush(Color.FromRgb(139, 148, 158));
 
     private readonly ClientSession _session;
     private readonly Func<Task> _refresh;
     private TunnelInfo _model;
     private bool _stopRequested;
+    private bool _trafficExhausted;
+    private bool _wasRunning;
 
     public event EventHandler? Deleted;
 
@@ -37,7 +40,7 @@ public sealed partial class TunnelCardViewModel : ObservableObject
     [ObservableProperty] private bool _canCopy;
     [ObservableProperty] private bool _isTakeoverVisible;
     [ObservableProperty] private string _copyButtonText = "复制";
-    [ObservableProperty] private Brush _statusBrush = OnlineBrush;
+    [ObservableProperty] private Brush _statusBrush = ClosedBrush;
 
     public bool CanToggle => !IsBusy;
     public string ServerUrl => _session.ServerUrl;
@@ -93,7 +96,86 @@ public sealed partial class TunnelCardViewModel : ObservableObject
         else if (string.IsNullOrWhiteSpace(ErrorText))
         {
             StatusText = "隧道已关闭";
-            StatusBrush = OnlineBrush;
+            StatusBrush = ClosedBrush;
+        }
+
+        if (ErrorText.StartsWith("流量已耗尽", StringComparison.Ordinal))
+        {
+            StatusText = "流量已耗尽";
+            StatusBrush = ErrorBrush;
+            IsTakeoverVisible = false;
+        }
+    }
+
+    public async Task HandleTrafficExhaustedAsync()
+    {
+        if (_trafficExhausted &&
+            ErrorText.StartsWith("流量已耗尽", StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _trafficExhausted = true;
+        var shouldNotify = _wasRunning || IsRunning || IsActive || IsBusy ||
+            StatusText is "连接中" or "在线" or "启动中…";
+        if (!shouldNotify)
+        {
+            return;
+        }
+
+        _wasRunning = false;
+        _stopRequested = true;
+        IsRunning = false;
+        IsBusy = false;
+        IsTakeoverVisible = false;
+        StatusText = "流量已耗尽";
+        StatusBrush = ErrorBrush;
+        ErrorText = "流量已耗尽，隧道已自动关闭，请联系管理员充值。";
+        OnPropertyChanged(nameof(IsRunning));
+
+        try
+        {
+            await _session.Frpc.StopAsync(Id);
+        }
+        catch
+        {
+            // Best effort: the backend has already stopped billing this tunnel.
+        }
+    }
+
+    public void ClearTrafficExhausted()
+    {
+        if (!_trafficExhausted &&
+            !ErrorText.StartsWith("流量已耗尽", StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _trafficExhausted = false;
+        if (ErrorText.StartsWith("流量已耗尽", StringComparison.Ordinal))
+        {
+            ErrorText = "";
+            if (IsRunning && IsActive)
+            {
+                StatusText = "在线";
+                StatusBrush = OnlineBrush;
+            }
+            else if (IsRunning)
+            {
+                StatusText = "连接中";
+                StatusBrush = StartingBrush;
+            }
+            else if (IsActive)
+            {
+                StatusText = "其他客户端";
+                StatusBrush = RemoteBrush;
+            }
+            else
+            {
+                StatusText = "隧道已关闭";
+                StatusBrush = ClosedBrush;
+            }
+            IsTakeoverVisible = IsActive && !IsRunning && !IsBusy;
         }
     }
 
@@ -135,6 +217,7 @@ public sealed partial class TunnelCardViewModel : ObservableObject
                 StatusBrush = ErrorBrush;
                 return;
             }
+            ClearTrafficExhausted();
             if (!user.EnabledTunnelTypes.Contains(_model.Type))
             {
                 ErrorText = $"该节点已禁用 {TypeLabel} 隧道。";
@@ -170,9 +253,22 @@ public sealed partial class TunnelCardViewModel : ObservableObject
             StatusBrush = StartingBrush;
             await _session.Frpc.StartAsync(Id, config, OnFrpcExit);
             IsRunning = true;
+            _wasRunning = true;
             IsTakeoverVisible = false;
 
+            if (_trafficExhausted)
+            {
+                await _session.Frpc.StopAsync(Id);
+                IsRunning = false;
+                return;
+            }
+
             var active = await WaitForActiveAsync();
+            if (_trafficExhausted)
+            {
+                IsRunning = false;
+                return;
+            }
             if (!active)
             {
                 if (_session.Frpc.IsRunning(Id))
@@ -216,6 +312,7 @@ public sealed partial class TunnelCardViewModel : ObservableObject
     private async Task StopAsync()
     {
         _stopRequested = true;
+        _wasRunning = false;
         IsBusy = true;
         ErrorText = "";
         try
@@ -234,7 +331,7 @@ public sealed partial class TunnelCardViewModel : ObservableObject
             else
             {
                 StatusText = "隧道已关闭";
-                StatusBrush = OnlineBrush;
+                StatusBrush = ClosedBrush;
             }
         }
         catch (Exception ex)
@@ -300,6 +397,7 @@ public sealed partial class TunnelCardViewModel : ObservableObject
         }
 
         _stopRequested = true;
+        _wasRunning = false;
         IsBusy = true;
         ErrorText = "";
         try
@@ -322,6 +420,7 @@ public sealed partial class TunnelCardViewModel : ObservableObject
     public async Task StopForShutdownAsync()
     {
         _stopRequested = true;
+        _wasRunning = false;
         try
         {
             await _session.Frpc.StopAsync(Id);
@@ -383,6 +482,13 @@ public sealed partial class TunnelCardViewModel : ObservableObject
             IsRunning = false;
             IsBusy = false;
             IsTakeoverVisible = IsActive;
+            if (_trafficExhausted)
+            {
+                StatusText = "流量已耗尽";
+                StatusBrush = ErrorBrush;
+                IsTakeoverVisible = false;
+                return;
+            }
             if (_stopRequested)
             {
                 return;
@@ -399,7 +505,7 @@ public sealed partial class TunnelCardViewModel : ObservableObject
             if (!looksLikeError)
             {
                 StatusText = "隧道已关闭";
-                StatusBrush = OnlineBrush;
+                StatusBrush = ClosedBrush;
                 _ = SafeRefreshAsync();
                 return;
             }

@@ -3,7 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  Title="FireflyFrp"
-                 Width="1040"
+                 Width="1200"
                  Height="700"
                  MinWidth="900"
                  MinHeight="620"
