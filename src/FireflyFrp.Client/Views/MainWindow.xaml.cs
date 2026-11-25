@@ -81,6 +81,14 @@ public partial class MainWindow : FluentWindow
         ((App)Application.Current).ShowCreateTunnelDialog();
     }
 
+    private void EditTunnel_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is TunnelCardViewModel card)
+        {
+            ((App)Application.Current).ShowEditTunnelDialog(card);
+        }
+    }
+
     private void MoreButton_Click(object sender, RoutedEventArgs e)
     {
         if (MoreButton.Flyout is ContextMenu menu)

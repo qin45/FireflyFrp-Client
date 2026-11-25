@@ -44,6 +44,75 @@ public sealed partial class TunnelCardViewModel : ObservableObject
 
     public bool CanToggle => !IsBusy;
     public string ServerUrl => _session.ServerUrl;
+    public string TunnelName => Name;
+    public string LocalIp => _model.LocalIp;
+    public int LocalPort => _model.LocalPort;
+
+    /// <summary>
+    /// Applies name/local endpoint edits. Changing the endpoint rotates the
+    /// tunnel token, so the tunnel is stopped first and restarted afterwards.
+    /// </summary>
+    public async Task UpdateDetailsAsync(string name, string localIp, int localPort)
+    {
+        if (IsBusy)
+        {
+            return;
+        }
+
+        var endpointChanged = localIp != LocalIp || localPort != LocalPort;
+        var wasRunning = IsRunning;
+        IsBusy = true;
+        ErrorText = "";
+        try
+        {
+            if (wasRunning)
+            {
+                _stopRequested = true;
+                StatusText = "停止中…";
+                StatusBrush = StoppingBrush;
+                await _session.Frpc.StopAsync(Id);
+                IsRunning = false;
+                _wasRunning = false;
+                OnPropertyChanged(nameof(IsRunning));
+            }
+
+            var response = await _session.Api.UpdateTunnelAsync(
+                Id,
+                new TunnelUpdateRequest
+                {
+                    Name = name.Trim(),
+                    LocalIp = string.IsNullOrWhiteSpace(localIp) ? "127.0.0.1" : localIp.Trim(),
+                    LocalPort = localPort,
+                });
+
+            if (!string.IsNullOrWhiteSpace(response.FrpcConfig))
+            {
+                _session.TunnelConfigs.Save(Id, response.FrpcConfig);
+            }
+            UpdateFrom(response.Tunnel);
+            await SafeRefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorText = ex.Message;
+            IsBusy = false;
+            OnPropertyChanged(nameof(IsRunning));
+            throw;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+
+        if (wasRunning && endpointChanged && !_trafficExhausted)
+        {
+            await StartAsync();
+        }
+        else
+        {
+            OnPropertyChanged(nameof(IsRunning));
+        }
+    }
 
     public TunnelCardViewModel(ClientSession session, TunnelInfo model, Func<Task> refresh)
     {

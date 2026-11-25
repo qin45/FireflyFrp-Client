@@ -194,7 +194,9 @@ They are deleted when a tunnel stops or the client exits. Logs are written to:
 - State: Online / Tunnel closed (gray) / Starting / Stopping / Running in another client / Disconnected
 - When the quota is exhausted, the tunnel switch is turned off and a clear quota message is shown
 - Stopping a tunnel intentionally does not show raw frpc logs; only abnormal exits show an error tail
-- Public address, shown only while online:
+- Public address:
+  - While offline the row shows "Start the tunnel to open the public address"
+    and the copy button is disabled
   - TCP/UDP: `host:port`
   - HTTP/HTTPS: `http://domain` / `https://domain`
   - **Copy** writes the address to the clipboard
@@ -221,7 +223,7 @@ They are deleted when a tunnel stops or the client exits. Logs are written to:
 
 ---
 
-## 6. Creating and Deleting Tunnels
+## 6. Creating, Editing, and Deleting Tunnels
 
 - **New Tunnel** dialog:
   - The type list only contains types allowed by the backend's
@@ -229,6 +231,12 @@ They are deleted when a tunnel stops or the client exits. Logs are written to:
   - Enter the name, local IP, and local port.
   - On success, the frpc configuration is encrypted and saved locally, and the
     tunnel list is refreshed.
+- Edit:
+  - The **Edit** button on each card changes the name, local IP, and local port.
+  - Changing only the name does not affect a running tunnel.
+  - Changing the local IP or port rotates the tunnel token and reissues the
+    frpc configuration; a running tunnel is stopped and restarted with the new
+    configuration.
 - Delete:
   - Requires confirmation.
   - An online tunnel is disconnected first.

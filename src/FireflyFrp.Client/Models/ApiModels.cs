@@ -83,6 +83,20 @@ public sealed class TunnelCreateResponse
     [JsonPropertyName("frpc_config")] public string FrpcConfig { get; set; } = "";
 }
 
+public sealed class TunnelUpdateRequest
+{
+    [JsonPropertyName("name")] public string Name { get; set; } = "";
+    [JsonPropertyName("local_ip")] public string LocalIp { get; set; } = "127.0.0.1";
+    [JsonPropertyName("local_port")] public int LocalPort { get; set; }
+}
+
+public sealed class TunnelUpdateResponse
+{
+    [JsonPropertyName("tunnel")] public TunnelInfo Tunnel { get; set; } = new();
+    [JsonPropertyName("token")] public string? Token { get; set; }
+    [JsonPropertyName("frpc_config")] public string? FrpcConfig { get; set; }
+}
+
 public sealed class TunnelTokenResponse
 {
     [JsonPropertyName("token")] public string Token { get; set; } = "";

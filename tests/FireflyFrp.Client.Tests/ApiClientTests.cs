@@ -173,4 +173,42 @@ public sealed class ApiClientTests
         Assert.Contains("\"old_password\":\"old-password\"", body);
         Assert.Contains("\"new_password\":\"new-password\"", body);
     }
+
+    [Fact]
+    public async Task UpdateTunnelSendsPatchWithEndpoints()
+    {
+        string? body = null;
+        var handler = new RecordingHandler(request =>
+        {
+            body = request.Content?.ReadAsStringAsync().GetAwaiter().GetResult();
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(
+                    "{\"tunnel\":{\"id\":\"abc\",\"name\":\"renamed\",\"type\":\"tcp\",\"local_ip\":\"10.0.0.5\",\"local_port\":2222,\"remote_port\":20000,\"subdomain\":null,\"domain\":null,\"public_address\":\"frp.test:20000\",\"status\":\"inactive\",\"active\":false,\"traffic_in_bytes\":0,\"traffic_out_bytes\":0,\"created_at\":\"2026-01-01T00:00:00\"},\"token\":null,\"frpc_config\":null}",
+                    Encoding.UTF8,
+                    "application/json"),
+            };
+        });
+        var api = new ApiClient(new HttpClient(handler));
+        api.SetSession("http://localhost:8080", "token-1");
+
+        var result = await api.UpdateTunnelAsync(
+            "abc",
+            new TunnelUpdateRequest
+            {
+                Name = "renamed",
+                LocalIp = "10.0.0.5",
+                LocalPort = 2222,
+            });
+
+        Assert.Equal(HttpMethod.Patch, handler.Requests[0].Method);
+        Assert.Equal(
+            "http://localhost:8080/api/v1/tunnels/abc",
+            handler.Requests[0].RequestUri?.ToString());
+        Assert.Contains("\"name\":\"renamed\"", body);
+        Assert.Contains("\"local_ip\":\"10.0.0.5\"", body);
+        Assert.Contains("\"local_port\":2222", body);
+        Assert.Equal("renamed", result.Tunnel.Name);
+        Assert.Null(result.FrpcConfig);
+    }
 }

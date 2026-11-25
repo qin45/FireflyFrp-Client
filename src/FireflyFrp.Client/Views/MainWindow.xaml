@@ -131,9 +131,21 @@
                             <DataTemplate>
                                 <Border Style="{StaticResource PanelStyle}"
                                         Width="340"
-                                        Margin="0,0,16,16">
-                                    <StackPanel>
-                                        <Grid>
+                                        Margin="0,0,16,16"
+                                        VerticalAlignment="Stretch">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
@@ -151,7 +163,7 @@
                                                              VerticalAlignment="Center" />
                                         </Grid>
 
-                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,6,0,0">
                                             <Border Style="{StaticResource TypeBadgeStyle}">
                                                 <TextBlock Text="{Binding TypeLabel}"
                                                            FontSize="12"
@@ -164,12 +176,12 @@
                                                        VerticalAlignment="Center" />
                                         </StackPanel>
 
-                                        <TextBlock Text="{Binding LocalTarget}"
+                                        <TextBlock Grid.Row="2"
+                                                   Text="{Binding LocalTarget}"
                                                    Style="{StaticResource MutedTextStyle}"
                                                    Margin="0,12,0,0" />
 
-                                        <Grid Margin="0,8,0,0"
-                                              Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibility}}">
+                                        <Grid Grid.Row="3" Margin="0,8,0,0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
@@ -180,7 +192,13 @@
                                                        FontSize="12"
                                                        TextTrimming="CharacterEllipsis"
                                                        VerticalAlignment="Center"
-                                                       Visibility="{Binding PublicAddress, Converter={StaticResource NullToVisibility}}" />
+                                                       Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibility}}" />
+                                            <TextBlock Grid.Column="0"
+                                                       Text="启动隧道以开放映射地址"
+                                                       Style="{StaticResource MutedTextStyle}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center"
+                                                       Visibility="{Binding IsActive, Converter={StaticResource InverseBoolToVisibility}}" />
                                             <ui:Button Grid.Column="1"
                                                        Content="{Binding CopyButtonText}"
                                                        Appearance="Transparent"
@@ -190,16 +208,18 @@
                                                        Margin="8,0,0,0" />
                                         </Grid>
 
-                                        <TextBlock Text="{Binding TrafficText}"
+                                        <TextBlock Grid.Row="4"
+                                                   Text="{Binding TrafficText}"
                                                    Style="{StaticResource MutedTextStyle}"
                                                    Margin="0,8,0,0" />
 
-                                        <TextBlock Text="{Binding ErrorText}"
+                                        <TextBlock Grid.Row="5"
+                                                   Text="{Binding ErrorText}"
                                                    Style="{StaticResource DangerTextStyle}"
                                                    Margin="0,8,0,0"
                                                    Visibility="{Binding ErrorText, Converter={StaticResource NullToVisibility}}" />
 
-                                        <Grid Margin="0,12,0,0">
+                                        <Grid Grid.Row="7" Margin="0,12,0,0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
@@ -210,13 +230,17 @@
                                                        Command="{Binding TakeoverCommand}"
                                                        HorizontalAlignment="Left"
                                                        Visibility="{Binding IsTakeoverVisible, Converter={StaticResource BoolToVisibility}}" />
-                                            <ui:Button Grid.Column="1"
-                                                       Content="删除"
-                                                       Appearance="Transparent"
-                                                       Command="{Binding DeleteCommand}"
-                                                       HorizontalAlignment="Right" />
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <ui:Button Content="编辑"
+                                                           Appearance="Transparent"
+                                                           Click="EditTunnel_Click"
+                                                           Margin="0,0,8,0" />
+                                                <ui:Button Content="删除"
+                                                           Appearance="Transparent"
+                                                           Command="{Binding DeleteCommand}" />
+                                            </StackPanel>
                                         </Grid>
-                                    </StackPanel>
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

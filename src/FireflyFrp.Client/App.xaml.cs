@@ -251,6 +251,18 @@ public partial class App : Application
         }
     }
 
+    public void ShowEditTunnelDialog(TunnelCardViewModel card)
+    {
+        var viewModel = new EditTunnelViewModel(card);
+        var window = new EditTunnelWindow
+        {
+            DataContext = viewModel,
+            Owner = _mainWindow,
+        };
+        viewModel.Saved += (_, _) => window.DialogResult = true;
+        window.ShowDialog();
+    }
+
     public void ShowChangePasswordDialog()
     {
         if (_session is null)

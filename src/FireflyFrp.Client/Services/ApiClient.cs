@@ -108,6 +108,18 @@ public sealed class ApiClient
         SendAsync<TunnelCreateResponse>(
             HttpMethod.Post, null, "/api/v1/tunnels", request, true, cancellationToken);
 
+    public Task<TunnelUpdateResponse> UpdateTunnelAsync(
+        string tunnelId,
+        TunnelUpdateRequest request,
+        CancellationToken cancellationToken = default) =>
+        SendAsync<TunnelUpdateResponse>(
+            HttpMethod.Patch,
+            null,
+            $"/api/v1/tunnels/{Uri.EscapeDataString(tunnelId)}",
+            request,
+            true,
+            cancellationToken);
+
     public async Task DeleteTunnelAsync(string tunnelId, CancellationToken cancellationToken = default)
     {
         await SendAsync<object>(
