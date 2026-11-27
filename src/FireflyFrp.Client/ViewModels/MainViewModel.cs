@@ -16,6 +16,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
 
     public event EventHandler? LogoutRequested;
     public event EventHandler? SessionExpired;
+    public event EventHandler? AccountDisabled;
     public event EventHandler? TunnelsChanged;
 
     [ObservableProperty] private string _username = "";
@@ -109,6 +110,11 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         {
             StopPolling();
             SessionExpired?.Invoke(this, EventArgs.Empty);
+        }
+        catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Forbidden)
+        {
+            StopPolling();
+            AccountDisabled?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception)
         {

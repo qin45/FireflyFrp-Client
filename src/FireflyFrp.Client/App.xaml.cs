@@ -187,6 +187,7 @@ public partial class App : Application
         _mainViewModel = new MainViewModel(_session);
         _mainViewModel.LogoutRequested += (_, _) => _ = LogoutAsync();
         _mainViewModel.SessionExpired += (_, _) => _ = HandleSessionExpiredAsync();
+        _mainViewModel.AccountDisabled += (_, _) => _ = HandleAccountDisabledAsync();
         _mainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
         _mainViewModel.TunnelsChanged += (_, _) => UpdateTrayTooltip();
 
@@ -354,6 +355,12 @@ public partial class App : Application
     {
         await TearDownSessionAsync();
         ShowLogin("登录已失效，请重新登录。");
+    }
+
+    private async Task HandleAccountDisabledAsync()
+    {
+        await TearDownSessionAsync();
+        ShowLogin("账号已被禁用，请联系管理员。");
     }
 
     private async Task TearDownSessionAsync()

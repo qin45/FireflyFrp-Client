@@ -116,6 +116,12 @@ public sealed partial class LoginViewModel : ObservableObject
             _api.ClearSession();
             ErrorMessage = "登录已过期，请重新登录。";
         }
+        catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Forbidden)
+        {
+            account.ClearAuth();
+            _api.ClearSession();
+            ErrorMessage = ex.Message;
+        }
         catch (HttpRequestException ex) when (ex.InnerException is AuthenticationException)
         {
             _api.ClearSession();

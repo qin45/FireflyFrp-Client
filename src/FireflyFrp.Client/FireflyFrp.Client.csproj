@@ -13,6 +13,9 @@
     <Version>1.0.0</Version>
     <Authors>FireflyFrp</Authors>
     <Product>FireflyFrp Client</Product>
+    <!-- Compress bundled assemblies in the single-file build; cuts the
+         self-contained executable roughly in half. -->
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
 
   <ItemGroup>

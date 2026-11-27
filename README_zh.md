@@ -284,6 +284,13 @@ dotnet publish src/FireflyFrp.Client -c Release -r win-x64 --self-contained true
 
 `frpc.exe` 同时内嵌在 `FireflyFrp.exe` 中：如果只复制 exe 和 `client.config.json` 到其他路径或电脑，首次启动隧道时会自动释放到 `%LocalAppData%\FireflyFrp\bin\frpc.exe`。如果 `Resources\frpc\frpc.exe` 存在，则优先使用外部文件，便于不重新打包就升级 frpc。
 
+单文件自包含发布默认开启 `EnableCompressionInSingleFile`，exe 体积约为未压缩的一半（当前约 78 MB）。首次启动会解压到临时目录，启动时间略长。如果需要更小的分发包，可以改为框架依赖发布，但用户必须安装 .NET 10 Desktop Runtime：
+
+```bash
+dotnet publish src/FireflyFrp.Client -c Release -r win-x64 --self-contained false \
+  -p:PublishSingleFile=true -o publish-framework
+```
+
 ---
 
 ## 10. 常见问题
@@ -293,6 +300,7 @@ dotnet publish src/FireflyFrp.Client -c Release -r win-x64 --self-contained true
 | 无法连接服务器 | 检查 `serverUrl`、网络、HTTPS 证书；确认用户服务已启动。 |
 | 提示服务器证书不受信任 | 确认服务器身份后点击“信任并继续”；也可在 `client.config.json` 的 `trustedCertificates` 预置证书文件或 SHA-256 指纹。 |
 | 登录已失效 | 重新登录；或检查后端 session 过期时间。 |
+| 提示账号已被禁用 | 管理员禁用了账号。客户端会停止本机隧道、清除保存的登录状态并返回登录页；请联系管理员恢复账号。 |
 | 流量不足 | 管理员在用户服务中充值（`remaining_traffic_bytes`）。 |
 | 最多同时开启 3 条 | 先停止其他隧道；上限由后端 `max_active_tunnels` 控制。 |
 | 其他客户端运行中 | 点击“接管”，确认后轮换令牌并启动本机 frpc。 |

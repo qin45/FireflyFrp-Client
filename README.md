@@ -315,6 +315,18 @@ start extracts it to `%LocalAppData%\FireflyFrp\bin\frpc.exe`. If
 `Resources\frpc\frpc.exe` exists, that external file is used first, which makes
 it possible to upgrade frpc without repackaging the client.
 
+The single-file self-contained build enables
+`EnableCompressionInSingleFile`, which roughly halves the executable size
+(currently about 78 MB). The first launch extracts the bundle to a temp
+directory, so startup is slightly slower. For a smaller package, publish
+framework-dependent instead (the user must install the .NET 10 Desktop
+Runtime):
+
+```bash
+dotnet publish src/FireflyFrp.Client -c Release -r win-x64 --self-contained false \
+  -p:PublishSingleFile=true -o publish-framework
+```
+
 ---
 
 ## 10. FAQ
@@ -324,6 +336,7 @@ it possible to upgrade frpc without repackaging the client.
 | Cannot connect to the server | Check `serverUrl`, the network, and the HTTPS certificate; confirm the user service is running. |
 | The server certificate is untrusted | Verify the server identity and click **Trust and continue**; or preconfigure the certificate file or SHA-256 fingerprint in `client.config.json` under `trustedCertificates`. |
 | Login has expired | Log in again, or check the backend session expiry. |
+| "Account disabled" shown | An administrator disabled the account. The client stops local tunnels, clears the saved session, and returns to the login page; contact the administrator to re-enable it. |
 | Not enough traffic | Ask an administrator to top up the account (`remaining_traffic_bytes`). |
 | At most 3 active tunnels | Stop another tunnel first; the backend's `max_active_tunnels` controls this. |
 | Running in another client | Click **Take over**, confirm, then rotate the token and start local frpc. |
